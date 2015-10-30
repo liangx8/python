@@ -1,15 +1,55 @@
 import os
 import re
+import types
 
-def find(path,cp):
+class ContentFind:
+    def __init__(self,root,fmatch):
+        self.__root=root
+        self.__fmatch=fmatch
 
-    for root,dirs,files in os.walk(path):
-        for f in files:
+    def find(self,cp):
+        for root,dirs,files in os.walk(self.__root):
+            for f in files:
+                fullname=fullname="{}/{}".format(root,f)
+                if type(self.__fmatch)==types.FunctionType:
+                    if self.__fmatch(fullname):
 
-            fullname=root+"/"+f
-            if not filefilter(fullname):
-                x=Search(fullname,cp)
-                readbin(x)
+                        self.readbin(fullname,cp)
+    def readbin(self,fullname,cp):
+        inp = open(fullname,"rb")
+        buf=inp.read()
+        inp.close()
+        showf=True
+        l=bytearray()
+        pattern=None
+        if type(cp)==str:
+            pattern=re.compile(cp)
+        ln=0
+        for n in buf:
+            if n!=ord('\n'):
+                l.append(n)
+            else:
+                ln=ln+1
+                dc,e = decode_byte(l)
+                if e:
+                    print("error at line: %d in file: %s" % (ln,fullname))
+                    print(e)
+                else:
+                    result=False
+                    if pattern:
+
+                        if pattern.search(dc):result=True
+                    else:
+                        if type(cp)==types.FunctionType:
+                            if cp(dc): result=True
+
+                        
+                    if result:
+                        if showf:
+                            print(fullname)
+                            showf=False
+                        print("%5d %s" % (ln,dc))
+                l.clear()
 def decode_byte(bs):
     try:
         return str(bs,'utf-8'),None
@@ -21,54 +61,16 @@ def decode_byte(bs):
     except Exception as e:
         return None,e
 
-#f should be object Search
-def readbin(f):
-    inp = open(f.filename(),"rb")
-    buf = inp.read()
-    inp.close()
-    l=bytearray()
-    ln=0
-    for n in buf:
-        if n != ord('\n'):
-            l.append(n)
-        else:
-            dc,e = decode_byte(l)
-            if e:
-
-                print("error at line: %d in file: %s" % (ln, f.filename()))
-                print(e)
-
-            else:
-                f.proc(ln,dc)
-            l=bytearray()
-            ln = ln +1
-def filefilter(path):
-    m = re.search('\\.inc$|\\.asm$|\\.INC$|\\.h',path)
-    if m:
-        return False
-    return True
-
-class Search:
-    def __init__(self,filename,cp):
-        self.__show=False
-        self.__fn=filename
-        self.__cp=cp
-
-    def proc(self,n,line):
-
-        if self.__cp(line):
-            if not self.__show:
-                print(self.__fn)
-                self.__show=True
-            print ("%5d %s" % (n,line))
-    def filename(self):
-        return self.__fn
 def comp(line):
-    m=re.search("TL[01]|time_t",line)
+    m=re.search("RSTSRC",line)
     return m
-
 if __name__=="__main__" :
-
-    find("e:/motor/BLHeli-master",comp)
-#    find("d:/p/mingw",comp)
+    
+    ff=re.compile("inc$|asm$")
+    def asmfilter(path):
+        return ff.search(path)
+    cf=ContentFind("e:/git/BLHeli/SiLabs",asmfilter)
+# cf.find("Flags0\\.PWM_ON")
+    
+    cf.find("DEMAG_DETECTED")
 

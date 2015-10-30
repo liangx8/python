@@ -28,5 +28,5 @@ def readb(fn,pos):
                 print(v,end="\t")
 if __name__=="__main__" :
 #    read("d:/lx/git/cpp/burn8051/x.bin",0xc00)
-    read("d:/lx/git/motor/atmel/x.bin",0)
-#    readb("d:/lx/git/cpp/burn8051/x.bin",0x800)
+#    read("d:/lx/git/motor/atmel/x.bin",0)
+    readb("d:/lx/git/motor/atmel/x.bin",0)
