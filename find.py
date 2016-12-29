@@ -66,11 +66,11 @@ def comp(line):
     return m
 if __name__=="__main__" :
     
-    ff=re.compile("inc$|asm$")
+    ff=re.compile("lua$")
     def asmfilter(path):
         return ff.search(path)
-    cf=ContentFind("e:/git/BLHeli/SiLabs",asmfilter)
+    cf=ContentFind("/home/arm/factorio/data/base",asmfilter)
 # cf.find("Flags0\\.PWM_ON")
     
-    cf.find("DEMAG_DETECTED")
+    cf.find("steel-plate")
 
