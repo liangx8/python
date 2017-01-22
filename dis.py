@@ -4,6 +4,97 @@ import re
 
 JMPS = { "brmi","rjmp","jmp","rcall","brne","brts","brcc","breq","brcs","brie","brpl","brtc" }
 hexstr = "0123456789abcdef"
+m48_reg = {
+0x60:"WDTCSR",
+0x61:"CLKPR",
+0x64:"PRR",
+0x66:"OSCCAL",
+0x68:"PCICR",
+0x69:"EICRA",
+0x6b:"PCMSK0",
+0x6c:"PCMSK1",
+0x6d:"PCMSK2",
+0x6e:"TIMSK0",
+0x6f:"TIMSK1",
+0x70:"TIMSK2",
+0x78:"ADCL",
+0x79:"ADCH",
+0x7a:"ADCSRA",
+0x7b:"ADCSRB",
+0x7c:"ADMUX",
+0x7e:"DIDR0",
+0x7f:"DIDR1",
+0x80:"TCCR1A",
+0x81:"TCCR1B",
+0x82:"TCCR1C",
+0x84:"TCNT1L",
+0x85:"TCNT1H",
+0x86:"ICR1L",
+0x87:"ICR1H",
+0x88:"OCR1AL",
+0x89:"OCR1AH",
+0x8a:"OCR1BL",
+0x8b:"OCR1BH",
+0xb0:"TCCR2A",
+0xb1:"TCCR2B",
+0xb2:"TCNT2",
+0xb3:"OCR2A",
+0xb4:"OCR2B",
+0xb6:"ASSR",
+0xb8:"TWBR",
+0xb9:"TWSR",
+0xba:"TWAR",
+0xbb:"TWDR",
+0xbc:"TWCR",
+0xbd:"TWAMR",
+0xc0:"UCSR0A",
+0xc1:"UCSR0B",
+0xc2:"UCSR0C",
+0xc4:"UBRR0L",
+0xc5:"UBRR0H",
+0xc6:"UDR0",
+0x03:"PINB",
+0x04:"DDRB",
+0x05:"PORTB",
+0x06:"PINC",
+0x07:"DDRC",
+0x08:"PORTC",
+0x09:"PIND",
+0x0a:"DDRD",
+0x0b:"PORTD",
+0x15:"TIFR0",
+0x16:"TIFR1",
+0x17:"TIFR2",
+0x1b:"PCIFR",
+0x1c:"EIFR",
+0x1d:"EIMSK",
+0x1e:"GPIOR0",
+0x1f:"EECR",
+0x20:"EEDR",
+0x21:"EEARL",
+0x22:"EEARH",
+0x23:"GTCCR",
+0x24:"TCCR0A",
+0x25:"TCCR0B",
+0x26:"TCNT0",
+0x27:"OCR0A",
+0x28:"OCR0B",
+0x2a:"GPIOR1",
+0x2b:"GPIOR2",
+0x2c:"SPCR",
+0x2d:"SPSR",
+0x2e:"SPDR",
+0x30:"ACSR",
+0x31:"MONDR",
+0x33:"SMCR",
+0x34:"MCUSR",
+0x35:"MCUCR",
+0x37:"SPMCSR",
+0x3f:"SREG",
+0x3e:"SPH",
+0x3d:"SPL"
+}
+
 m8_reg = {
 "0x3f":"SREG", 
 "0x3d":"SPL", 
@@ -68,6 +159,9 @@ m8_reg = {
 "0x00":"TWBR"
 }
 
+
+ioopcode1 = ("out","cbi","sbi","sbic","sbis","sts")
+ioopcode2 = ("in","lds")
 def reladdr(addr,s):
     new_addr=addr+int(s[1:])+2
     while new_addr < 0:
@@ -129,8 +223,8 @@ def addr(s):
         index=index-1
         m=m*16
     return su
-    
-if __name__=="__main__" :
+
+def disa():
     ll=list()
     l_addr=list()
     with codecs.open("e:/tgy/super.lst","r","utf-8") as f:
@@ -154,4 +248,40 @@ if __name__=="__main__" :
     print(".exit",file=target)
     target.close()
 
+def parse_opcode(s):
+    for opcode in ioopcode1:
+        idx=s.find(opcode+"\t")
+        if idx >=0 :
+            op=s[idx:]
+            pstart=op.find("0")
+            pend=op.find(",")
+            k=int(op[pstart:pend],16)
+            if k < 0x100:
+                return "{} {}{}".format(s[:idx+pstart],m48_reg[k],s[idx+pend:len(s)-1])
+    #for opcode in ioopcode2:
+    #    idx=s.find(opcode+"\t")
+    #    if idx >=0 :
+    #        print(s[idx:],end="")
+    #        return
+    return s[:len(s)-1]
+        
+def ioname():
+    target = open("/home/arm/git/mcu/progbox/progbox.ast","w")
+    with codecs.open("/home/arm/git/mcu/progbox/progbox.lss","r","utf-8") as f:
+        for line in f:
+            print(parse_opcode(line),file=target)
+    target.close
+def register():
+    """把寄存器的格式变成PYHON格式
+cat /usr/avr/include/avr/iomx8.h | grep "IO8" > <target file>
+cat /usr/avr/include/avr/iomx8.h | grep "MEM8" >> <target file>
+"""
+    with codecs.open("/home/arm/m48.h","r","utf-8") as f:
+        for line in f:
+            st = line.strip()
+            al = st.split(" ")
+            length=len(st)
+            print("\"{}\":\"{}\",".format(st[length-5:length-1],al[1]))
+if __name__=="__main__" :
+    ioname()
 

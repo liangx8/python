@@ -22,7 +22,7 @@ def readb(fn,pos):
         f.seek(pos)
         for i in range(256):
             v=ord(f.read(1))
-            if i % 4 == 0:
+            if i % 6 == 0:
                 print()
                 print('%i\t%i' % (i,v),end="\t")
             else:
@@ -31,4 +31,4 @@ def readb(fn,pos):
 if __name__=="__main__" :
 #    read("d:/lx/git/cpp/burn8051/x.bin",0xc00)
 #    read("d:/lx/git/motor/atmel/x.bin",0)
-    read("/home/arm/git/motor/atmel/eeprom.bin",0)
+    readb("/home/arm/git/motor/atmel/eeprom.bin",0)
