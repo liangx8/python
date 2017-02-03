@@ -11,10 +11,11 @@ def extract_content(zfile,dst=None):
         zfile.extractall()
     else:
         zfile.extractall(dst)
-def walk_file(path):
+def walk_file(path,z):
     for root,dirs,files in os.walk(path):
         for f in files:
-            print("{}/{}".format(root,f))
+            z.write("{}/{}".format(root,f))
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='zip utility')
     parser.add_argument("zfile",metavar="target | sources ...",
@@ -41,7 +42,11 @@ if __name__ == '__main__':
             with zipfile.ZipFile(args.zfile[0],"w") as zip:
                 
                 for sub in args.zfile[1:]:
-                    walk_file(sub)
+                    if os.path.islink(sub): continue
+                    if os.path.isfile(sub):
+                        zip.write(sub)
+                        continue
+                    walk_file(sub,zip)
     except zipfile.BadZipfile as e:
         #print("Error: '{}' is not zip format".format(args.zfile))
         print(e)
