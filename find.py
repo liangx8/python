@@ -70,9 +70,13 @@ if __name__=="__main__" :
 # cf.find("Flags0\\.PWM_ON")
     
     cf("steel-plate")
-    cnt = 0;
+    
+    cnt = 0
     def count(l):
+        global cnt
         cnt = cnt + 1
+        if cnt == 1000:
+            return True
 
     cf(count)
     print(cnt)
