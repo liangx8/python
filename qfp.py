@@ -1,6 +1,32 @@
 import tkinter as tk
 # for pcb
 toInch = 0.0393700787
+cv_xmax = 500
+cv_ymax = 500
+cv_xmid = int(cv_xmax/2)
+cv_ymid = int(cv_ymax/2)
+class IntEntry(tk.Entry):
+    def __init__(self,val,master=None):
+        super().__init__(master)
+        self.__val=tk.IntVar(self,val)
+        self["textvariable"]=self.__val
+        super().bind('<Key-Return>',self.__event_tri)
+        self.__valOrg=val
+    def trigger(self,func=None):
+        self.__tri_func=func
+    def __event_tri(self,event):
+        try:
+            val=self.__val.get()
+            self.__valOrg=val
+        except:
+            self.__val.set(self.__valOrg)
+            return "break"
+        if self.__tri_func:
+            return self.__tri_func()
+    def __get_val(self):
+        return self.__val.get()
+    val=property(fget=__get_val)
+        
 class SizeEntry(tk.Frame):
     def __init__(self,defVal, master=None):
         super().__init__(master)
@@ -39,13 +65,11 @@ class SizeEntry(tk.Frame):
         except ValueError:
             self.__inch.set(self.inchOrg)
             return "break"
-    def __set_inch(self,_):
-        pass
     def __get_inch(self):
         return self.__inch.get()
     def trigger(self,func=None):
         self.__tri_func=func
-    inch = property(__get_inch,__set_inch)
+    inch = property(fget=__get_inch)
     
 class QFPWindow(tk.Frame):
     def __init__(self, master=None):
@@ -54,10 +78,48 @@ class QFPWindow(tk.Frame):
         self.create_widgets()
 
     def draw(self):
-        print("X length:{}".format(self.xlen.inch))
-        print("Y length:{}".format(self.ylen.inch))
-    def draw_event(self,event):
-        self.draw()
+        width=int(self.xlen.inch * 1000)
+        height=int(self.ylen.inch * 1000)
+        self.cv.create_rectangle(0,0,cv_xmax,cv_ymax,fill="grey")
+        #layout
+        padl=int(self.padl.inch * 1000)
+        xlayout=width -padl
+        x0 = int((cv_xmax - xlayout)/2)
+        x1 = x0 + xlayout
+        ylayout = height - padl
+        y0 = int((cv_ymax - ylayout)/2)
+        y1 = y0 + ylayout
+        self.cv.create_rectangle(x0,y0,x1,y1,outline="yellow")
+        # 垂直 pads
+        row = self.ry.val
+        x0=int((cv_xmax-width)/2)
+        x1=x0+padl
+        ex1=int((cv_xmax-width)/2)+width
+        ex0=ex1-padl
+        pitch=int(self.pitch.inch*1000)
+        padw = int(self.padw.inch * 1000)
+        padlyt=pitch * (row -1) + padw
+        y0=int((cv_ymax-padlyt)/2)
+        
+        for i in range(row):
+            y1=y0+padw
+            self.cv.create_rectangle(x0,y0,x1,y1,fill="green")
+            self.cv.create_rectangle(ex0,y0,ex1,y1,fill="green")
+            y0=y0+pitch
+        # 水平 pads
+        col = self.rx.val
+        y0=int((cv_ymax-height)/2)
+        y1=y0+padl
+        ey1=int((cv_ymax-height)/2)+height
+        ey0=ey1-padl
+        padlyt=pitch * (col -1) + padw
+        x0=int((cv_xmax-padlyt)/2)
+        for i in range(col):
+            x1=x0+padw
+            self.cv.create_rectangle(x0,y0,x1,y1,fill="green")
+            self.cv.create_rectangle(x0,ey0,x1,ey1,fill="green")
+            x0=x0+pitch
+        
     def create_widgets(self):
         
         x = tk.Label(self,text="Pitch")
@@ -74,28 +136,29 @@ class QFPWindow(tk.Frame):
         
         x = tk.Label(self,text="Pad Length")
         x.grid(column =0,row=3,columnspan=2)
-        self.padl = SizeEntry(.025,self)
+        self.padl = SizeEntry(.047,self)
         self.padl.grid(column=2,row=3)
         self.padl.trigger(self.draw)
 
         
-        self.rx = tk.Entry(self)
-        self.rx["textvariable"]=tk.IntVar(self,8)
+        self.rx = IntEntry(8,self)
+        self.rx.trigger(self.draw)
+        
         self.rx.grid(column=0,row=4)
         x=tk.Label(self,text="X Length")
         x.grid(column=1,row=4)
-        self.xlen = SizeEntry(.2,self)
+        self.xlen = SizeEntry(.382,self)
         self.xlen.grid(column=2,row=4)
         self.xlen.trigger(self.draw)
-        self.rx.bind("<Key-Return>",self.draw_event)
+        
 
-        self.ry = tk.Entry(self)
-        self.ry["textvariable"]=tk.IntVar(self,8)
+        self.ry = IntEntry(8,self)
+        self.ry.trigger(self.draw)
         self.ry.grid(column=0,row=5)
-        self.ry.bind("<Key-Return>",self.draw_event)
+        
         x=tk.Label(self,text="Y Length")
         x.grid(column=1,row=5)
-        self.ylen = SizeEntry(.2,self)
+        self.ylen = SizeEntry(.382,self)
         self.ylen.grid(column=2,row=5)
         self.ylen.trigger(self.draw)
 
@@ -104,9 +167,9 @@ class QFPWindow(tk.Frame):
         self.quit.grid(column=0,row=6,columnspan=2)
         self.gen = tk.Button(self,text="Generate")
         self.gen.grid(column=2,row=6)
-        cv = tk.Canvas(self,width=300,height=300)
-        cv.grid(column=0,columnspan=3,row=7)
-        cv.create_rectangle(0,0,300,300,fill="white")
+        self.cv = tk.Canvas(self,width=cv_xmax,height=cv_ymax)
+        self.cv.grid(column=0,columnspan=3,row=7)
+        
         self.draw()
 
 if __name__=="__main__":
