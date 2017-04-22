@@ -28,7 +28,13 @@ def readb(fn,pos):
             else:
                 print(v,end="\t")
         print()
+def x(a,b):
+    x=int(a+b)
+    x=int(x/2)
+    x=int(x+a)
+    return int(x/2)
+
 if __name__=="__main__" :
 #    read("d:/lx/git/cpp/burn8051/x.bin",0xc00)
 #    read("d:/lx/git/motor/atmel/x.bin",0)
-    readb("/home/arm/git/motor/atmel/eeprom.bin",0)
+    readb("/home/arm/git/motor/c/eeprom.bin",0)

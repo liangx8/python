@@ -266,8 +266,8 @@ def parse_opcode(s):
     return s[:len(s)-1]
         
 def ioname():
-    target = open("/home/arm/git/mcu/progbox/progbox.ast","w")
-    with codecs.open("/home/arm/git/mcu/progbox/progbox.lss","r","utf-8") as f:
+    target = open("/home/arm/git/motor/c/hall.ast","w")
+    with codecs.open("/home/arm/git/motor/c/hall.lss","r","utf-8") as f:
         for line in f:
             print(parse_opcode(line),file=target)
     target.close

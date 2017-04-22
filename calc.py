@@ -23,3 +23,24 @@ def current(n):
 1毫安时的ADC值 = 3.6安秒 * 安秒ADC = {}
 """
     print(f.format(adc2a,n,adc2a/2 * n,adc2a/2 * n * 3.6))
+
+
+def regularCalc(v,base,r=None):
+    if not r:
+        r=(110,33,47,4.7,1,10)
+    vout = 0
+    cp = 999
+    r1 =0
+    r2 =0
+    for rr1 in r:
+        for rr2 in r:
+            vout1 = base * (rr1/rr2 + 1)
+            cp1 = vout1 - v
+            if cp1 > 0:
+                if cp1 < cp:
+                    cp=cp1
+                    vout=vout1
+                    r1=rr1
+                    r2=rr2
+    return vout,r1,r2
+            
