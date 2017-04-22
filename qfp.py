@@ -5,6 +5,7 @@ cv_xmax = 500
 cv_ymax = 500
 cv_xmid = int(cv_xmax/2)
 cv_ymid = int(cv_ymax/2)
+
 class IntEntry(tk.Entry):
     def __init__(self,val,master=None):
         super().__init__(master)
@@ -81,17 +82,39 @@ class QFPWindow(tk.Frame):
         width=int(self.xlen.inch * 1000)
         height=int(self.ylen.inch * 1000)
         self.cv.create_rectangle(0,0,cv_xmax,cv_ymax,fill="grey")
-        #layout
         padl=int(self.padl.inch * 1000)
-        xlayout=width -padl
+        
+        row = self.ry.val
+        col = self.rx.val
+        xmargin = 2
+        ymargin = 2
+        if col ==0 : ymargin=0
+        if row ==0 : xmargin=0
+        xlayout=width - padl*xmargin - 10
         x0 = int((cv_xmax - xlayout)/2)
         x1 = x0 + xlayout
-        ylayout = height - padl
+        ylayout = height - padl*ymargin - 10
         y0 = int((cv_ymax - ylayout)/2)
         y1 = y0 + ylayout
+        #layout
         self.cv.create_rectangle(x0,y0,x1,y1,outline="yellow")
+
+        # pin1 mark
+        xoffset=int(xlayout * .1)
+        yoffset=int(ylayout *.1)
+        r = int(xlayout *.05)
+        if r == 0 : r=2
+        if r > 10 : r=10
+        if row == 0:
+            x0 = x0 + xoffset
+            y0 = y1 - yoffset
+        else:
+            x0 = x0 + xoffset
+            y0 = y0 + yoffset
+        self.cv.create_oval(x0-r,y0-r,x0+r,y0+r,fill="white")
+            
         # 垂直 pads
-        row = self.ry.val
+        
         x0=int((cv_xmax-width)/2)
         x1=x0+padl
         ex1=int((cv_xmax-width)/2)+width
@@ -107,7 +130,7 @@ class QFPWindow(tk.Frame):
             self.cv.create_rectangle(ex0,y0,ex1,y1,fill="green")
             y0=y0+pitch
         # 水平 pads
-        col = self.rx.val
+        
         y0=int((cv_ymax-height)/2)
         y1=y0+padl
         ey1=int((cv_ymax-height)/2)+height
