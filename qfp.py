@@ -6,6 +6,17 @@ cv_ymax = 500
 cv_xmid = int(cv_xmax/2)
 cv_ymid = int(cv_ymax/2)
 
+class FPElement:
+    def __init__(self,name,mx=0,my=0,sflags=0):
+        """ name name of Element
+mx x coordinate of mark
+my y coordinate of mark
+sflags SFlags
+"""
+        self.name=name
+        self.mx=mx
+        self.my=my
+        self.sflags=sflags
 class IntEntry(tk.Entry):
     def __init__(self,val,master=None):
         super().__init__(master)
@@ -126,8 +137,8 @@ class QFPWindow(tk.Frame):
         
         for i in range(row):
             y1=y0+padw
-            self.cv.create_rectangle(x0,y0,x1,y1,fill="green")
-            self.cv.create_rectangle(ex0,y0,ex1,y1,fill="green")
+            self.cv.create_rectangle(x0,y0,x1,y1,fill="white")
+            self.cv.create_rectangle(ex0,y0,ex1,y1,fill="white")
             y0=y0+pitch
         # 水平 pads
         
@@ -139,8 +150,8 @@ class QFPWindow(tk.Frame):
         x0=int((cv_xmax-padlyt)/2)
         for i in range(col):
             x1=x0+padw
-            self.cv.create_rectangle(x0,y0,x1,y1,fill="green")
-            self.cv.create_rectangle(x0,ey0,x1,ey1,fill="green")
+            self.cv.create_rectangle(x0,y0,x1,y1,fill="white")
+            self.cv.create_rectangle(x0,ey0,x1,ey1,fill="white")
             x0=x0+pitch
         
     def create_widgets(self):
@@ -190,8 +201,15 @@ class QFPWindow(tk.Frame):
         self.quit.grid(column=0,row=6,columnspan=2)
         self.gen = tk.Button(self,text="Generate")
         self.gen.grid(column=2,row=6)
+
+        x = tk.Label(self,text="Description")
+        x.grid(column=0,row=7)
+        self.desc=tk.Entry(self)
+        self.desc.grid(column=1,row=7,columnspan=2)
+
         self.cv = tk.Canvas(self,width=cv_xmax,height=cv_ymax)
-        self.cv.grid(column=0,columnspan=3,row=7)
+        self.cv.grid(column=0,columnspan=3,row=8)
+
         
         self.draw()
 
