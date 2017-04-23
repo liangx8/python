@@ -214,11 +214,11 @@ class QFPWindow(tk.Frame):
         height=int(self.ylen.inch * 1000)
 
         if row:
-            y0=int((height- pitch * (col-1)-thickness)/2)
-            x0=0
-            x1=padl-thickness
-            ex0=width-padl
-            ex1=width-thickness
+            y0=int((height- pitch * (col-1)-thickness)/2 - height /2) 
+            x0= - int(width /2)
+            x1=x0 + padl-thickness
+            ex0=width-padl - int(width /2)
+            ex1=width-thickness - int(width /2)
             for i in range(row):
                 #x1,y1,x2,y2,thickness,clearence,mask,number,flag
                 flag=0x100
@@ -229,11 +229,11 @@ class QFPWindow(tk.Frame):
                 y0 = y0 + pitch
                 
         if col:
-            x0=int((width- pitch * (row-1)-thickness)/2)
-            y0=0
-            y1=padl-thickness
-            ey0=height-padl
-            ey1=height-thickness
+            x0=int((width- pitch * (row-1)-thickness)/2 - width /2)
+            y0=- int(height /2)
+            y1=y0 + padl-thickness
+            ey0=height-padl - int(height /2)
+            ey1=height-thickness - int(height /2)
             for i in range(col):
                 flag=0x100
                 idx=row + i
