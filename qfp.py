@@ -26,7 +26,7 @@ Element [SFlags "Desc" "Name" "Value" MX MY TX TY TDir TScale TSFlags]
         self.children=[]
         self.desc=desc
     def render(self,file=None):
-        head="""Element [0x{:04x} "{}" "{}" "{}" {} {} {} {} 0 3 0x{:04x}]
+        head="""Element [0x{:04x} "{}" "{}" "{}" {:6} {:6} {:6} {:6} 0 3 0x{:04x}]
 ("""
         if file:
             print(head.format(self.sflags,self.desc,self.name,"value",self.mx,self.my,0,0,self.sflags),file=file)
@@ -57,7 +57,7 @@ Pad[rX1 rY1 rX2 rY2 Thickness Clearance Mask "Name" "Number" SFlags]
         self.number=number
         self.order=number
     def render(self,file=None):
-        form="""Pad[{} {} {} {} {} {} {} "{}" "{}" 0x{:04x}]"""
+        form="""Pad[{:6} {:6} {:6} {:6} {:6} {:6} {:6} "{}" "{}" 0x{:04x}]"""
         if file:
             print(form.format(self.x1,self.y1,self.x2,self.y2,self.thickness,self.clearence,self.mask,self.number,self.number,self.flag),file=file)
         else:
