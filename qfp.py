@@ -62,6 +62,20 @@ Pad[rX1 rY1 rX2 rY2 Thickness Clearance Mask "Name" "Number" SFlags]
             print(form.format(self.x1,self.y1,self.x2,self.y2,self.thickness,self.clearence,self.mask,self.number,self.number,self.flag),file=file)
         else:
             print(form.format(self.x1,self.y1,self.x2,self.y2,self.thickness,self.clearence,self.mask,self.number,self.number,self.flag))
+class FPLine:
+    def __init__(self,x1,y1,x2,y2,order):
+        self.x1=x1 * 100
+        self.x2=x2 * 100
+        self.y1=y1 * 100
+        self.y2=y2 * 100
+        self.order=order
+    def render(self,file=None):
+        form="""ElementLine[{:6} {:6} {:6} {:6} 100]"""
+        if file:
+            print(form.format(self.x1,self.y1,self.x2,self.y2),file=file)
+        else:
+            print(form.format(self.x1,self.y1,self.x2,self.y2))
+        
 class IntEntry(tk.Entry):
     def __init__(self,val,master=None):
         super().__init__(master)
@@ -213,7 +227,7 @@ class QFPWindow(tk.Frame):
         width=int(self.xlen.inch * 1000)
         height=int(self.ylen.inch * 1000)
 
-        if row:
+        if row > 0:
             y0=int((height- pitch * (col-1)-thickness)/2 - height /2) 
             x0= - int(width /2)
             x1=x0 + padl-thickness
@@ -228,7 +242,7 @@ class QFPWindow(tk.Frame):
                 ele.children.append(FPPad(ex0,y0,ex1,y1,thickness,10,thickness+10,row * 2 + col - i,0x100))
                 y0 = y0 + pitch
                 
-        if col:
+        if col > 0:
             x0=int((width- pitch * (row-1)-thickness)/2 - width /2)
             y0=- int(height /2)
             y1=y0 + padl-thickness
@@ -242,7 +256,23 @@ class QFPWindow(tk.Frame):
                 if not idx:flag=0
                 ele.children.append(FPPad(x0,ey0,x1,ey1,thickness,10,thickness+10,idx+1,flag))
                 x0 = x0 + pitch
-                
+
+        hw = int(width/2) #half width
+        hh = int(height/2) #half height
+        x0 = - hw
+        y0 = - hh
+        if row >0: x0 = x0 + padl
+        if col >0: y0 = y0 + padl
+        x1 = hw
+        y1 = hh
+        if row >0: x1 = x1 - padl - thickness
+        if col >0: y1 = y1 - padl - thickness
+        ele.children.append(FPLine(x0,y0,x0,y1,9999))
+        ele.children.append(FPLine(x0,y1,x1,y1,9999))
+        ele.children.append(FPLine(x1,y1,x1,y0,9999))
+        ele.children.append(FPLine(x1,y0,x0,y0,9999))
+                            
+        
         
         ele.sortChildren()
         with open("/home/arm/test.fp","w") as f:
