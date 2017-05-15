@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -15,9 +16,13 @@ class Application(tk.Frame):
         self.quit = tk.Button(self, text="QUIT", fg="red",
                               command=root.destroy)
         self.quit.pack(side="bottom")
+        self.tree = ttk.Treeview(self,text="a")
+        self.tree.pack(side="bottom")
+        
 
     def say_hi(self):
         print("hi there, everyone!")
+        print("root children:{}".format(self.tree.get_children()))
 if __name__=="__main__":
     root = tk.Tk()
     app = Application(master=root)

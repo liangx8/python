@@ -228,7 +228,8 @@ class QFPWindow(tk.Frame):
         height=int(self.ylen.inch * 1000)
 
         if row > 0:
-            y0=int((height- pitch * (col-1)-thickness)/2 - height /2) 
+            y0 = -int(height /2)
+            if col > 0: y0= -int((pitch * (col-1) + thickness)/2)
             x0= - int(width /2)
             x1=x0 + padl-thickness
             ex0=width-padl - int(width /2)
@@ -243,7 +244,8 @@ class QFPWindow(tk.Frame):
                 y0 = y0 + pitch
                 
         if col > 0:
-            x0=int((width- pitch * (row-1)-thickness)/2 - width /2)
+            x0=-int(width/2)
+            if row > 0: x0=-int((pitch *(row-1) + thickness)/2)
             y0=- int(height /2)
             y1=y0 + padl-thickness
             ey0=height-padl - int(height /2)
@@ -259,10 +261,10 @@ class QFPWindow(tk.Frame):
 
         hw = int(width/2) #half width
         hh = int(height/2) #half height
-        x0 = - hw
-        y0 = - hh
-        if row >0: x0 = x0 + padl
-        if col >0: y0 = y0 + padl
+        x0 = - hw - thickness
+        y0 = - hh - thickness
+        if row >0: x0 = x0 + padl + thickness
+        if col >0: y0 = y0 + padl + thickness
         x1 = hw
         y1 = hh
         if row >0: x1 = x1 - padl - thickness
@@ -281,41 +283,41 @@ class QFPWindow(tk.Frame):
         
         x = tk.Label(self,text="Pitch")
         x.grid(column =0,row=1,columnspan=2)
-        self.pitch = SizeEntry(0.02,self)
+        self.pitch = SizeEntry(0.05,self)
         self.pitch.grid(column=2,row=1)
         self.pitch.trigger(self.draw)
 
         x = tk.Label(self,text="Pad Width")
         x.grid(column =0,row=2,columnspan=2)
-        self.padw = SizeEntry(.009,self)
+        self.padw = SizeEntry(.028,self)
         self.padw.grid(column=2,row=2)
         self.padw.trigger(self.draw)
         
         x = tk.Label(self,text="Pad Length")
         x.grid(column =0,row=3,columnspan=2)
-        self.padl = SizeEntry(.022,self)
+        self.padl = SizeEntry(.07,self)
         self.padl.grid(column=2,row=3)
         self.padl.trigger(self.draw)
 
         
-        self.rx = IntEntry(5,self)
+        self.rx = IntEntry(4,self)
         self.rx.trigger(self.draw)
         
         self.rx.grid(column=0,row=4)
         x=tk.Label(self,text="X Length")
         x.grid(column=1,row=4)
-        self.xlen = SizeEntry(.157,self)
+        self.xlen = SizeEntry(.178,self)
         self.xlen.grid(column=2,row=4)
         self.xlen.trigger(self.draw)
         
 
-        self.ry = IntEntry(5,self)
+        self.ry = IntEntry(0,self)
         self.ry.trigger(self.draw)
         self.ry.grid(column=0,row=5)
         
         x=tk.Label(self,text="Y Length")
         x.grid(column=1,row=5)
-        self.ylen = SizeEntry(.157,self)
+        self.ylen = SizeEntry(.255,self)
         self.ylen.grid(column=2,row=5)
         self.ylen.trigger(self.draw)
 
@@ -328,7 +330,7 @@ class QFPWindow(tk.Frame):
         x = tk.Label(self,text="Description")
         x.grid(column=0,row=7)
         self.desc=tk.Entry(self)
-        self.desc["textvariable"]=tk.StringVar(self,"QFN20")
+        self.desc["textvariable"]=tk.StringVar(self,"SO8")
         self.desc.grid(column=1,row=7,columnspan=2)
 
         self.cv = tk.Canvas(self,width=cv_xmax,height=cv_ymax)
