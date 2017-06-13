@@ -44,3 +44,4 @@ def regularCalc(v,base,r=None):
                     r2=rr2
     return vout,r1,r2
             
+
