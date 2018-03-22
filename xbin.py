@@ -52,6 +52,11 @@ core_table=(
     None,None,None,None,
     'SVCall','DebugMonitor',None,'PendSV','SystTick'
     )
+core_table_m0=(
+    'Reset','NMI','HardFault',
+    None,None,None,None,None,None,None,
+    'SVCall',None,None,'PendSV','SystTick'
+    )
 def vector_table(xx):
     with open(xx,'r') as f:
         
@@ -63,7 +68,7 @@ def vector_table(xx):
                 l=l[:c-1]
             li.append(l)
         start=0x4
-        for x in core_table:
+        for x in core_table_m0:
             if x==None:
                 print(".long\t0\t\t/* 0x0800 {:04x} Reserved*/".format(start))
             else:

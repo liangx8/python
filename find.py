@@ -63,14 +63,13 @@ def comp(line):
     return m
 if __name__=="__main__" :
     
-    ff=re.compile("lua$")
-    def asmfilter(path):
+    ff=re.compile("c$|h$")
+    def cfilter(path):
         return ff.search(path)
-    cf=createFinder("/home/arm/factorio/data/base",asmfilter)
+    cf=createFinder("/home/arm/git/motor",cfilter)
 # cf.find("Flags0\\.PWM_ON")
     
-    cf("steel-plate")
-    
+    cf("SendData")
     cnt = 0
     def count(l):
         global cnt
