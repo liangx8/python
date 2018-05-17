@@ -66,10 +66,10 @@ if __name__=="__main__" :
     ff=re.compile("c$|h$")
     def cfilter(path):
         return ff.search(path)
-    cf=createFinder("/home/arm/git/motor",cfilter)
+    cf=createFinder("/home/arm/git/stm32f10x-stdperiph-lib",cfilter)
 # cf.find("Flags0\\.PWM_ON")
     
-    cf("SendData")
+    cf("xx1234")
     cnt = 0
     def count(l):
         global cnt

@@ -24,6 +24,57 @@ def current(n):
 """
     print(f.format(adc2a,n,adc2a/2 * n,adc2a/2 * n * 3.6))
 
+def div(x,y):
+    """
+模拟整数除
+"""
+    if x< y:
+        return 0
+    if y >= 0x80000000:
+        return 0
+    rest=x
+    all_result=0
+    while(rest >= y):
+        newy = y
+        result = 1
+        dby=int(y*2)
+        while(dby < rest):
+            newy=dby
+            dby=int(dby * 2)
+            result = result * 2
+        all_result = all_result + result
+        rest = rest - newy
+    return all_result,x/y
+
+def adiv(x,y):
+    """
+更高效的模拟整数除
+"""
+    if x< y:
+        return 0
+    if y >= 0x80000000:
+        return 0
+    result=0
+    b=0
+    i=32
+    while(True):
+        x = x << 1
+        b = b << 1
+        a=x >> 32
+        x=x & 0xffffffff
+        if a > 0:
+            b = b + 1
+        if b >= y:
+            result = result + 1
+            b = b-y
+        i = i - 1
+        if i == 0:
+            break
+        result = result << 1
+    return result
+        
+    
+    
 
 def regularCalc(v,base,r=None):
     if not r:
