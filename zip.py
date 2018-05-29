@@ -4,8 +4,9 @@ import argparse
 import os
 
 def list_content(zfile):
-    for n in zfile.namelist():
-        print(n)
+    for n in zfile.infolist():
+        if not n.is_dir():
+            print(n.filename)
 def extract_content(zfile,dst=None):
     if dst == None:
         zfile.extractall()
