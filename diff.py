@@ -65,8 +65,9 @@ def diff(f1,f2,cb):
     o1.close()
 def  run(idx,b1,b2):
     #print("{:04x} {:02x} {:02x}".format(idx,ord(b1),ord(b2)))
-    if ord(b1)==12 and ord(b2)==32:
+    if ord(b1)==93 and ord(b2)==30:
         print("{:04x}".format(idx))
 if __name__=='__main__':
-    diff('/home/arm/dos/Reko3/REKO3/MSAVE1.R3S','/home/arm/dos/Reko3/REKO3/MSAVE2.R3S',run)
+    #diff('/home/arm/dos/Reko3/REKO3/MSAVE1.R3S','/home/arm/dos/Reko3/REKO3/MSAVE2.R3S',run)
+    diff('/home/arm/dos/SAN5X/NBDATA.S5','/home/arm/dos/SAN5X/nbdata.s5.old',run)
 
