@@ -43,6 +43,6 @@ def recvFile(fn):
 
 if __name__ == "__main__":
     count = len(sys.argv)
-    if count == 2 :
+    if count == 3 :
         if sys.argv[1] == '-s':
-            sendFile('/home/arm/3d肉蒲团HD高清完美修正版.rmvb')
+            sendFile(sys.argv[2])
