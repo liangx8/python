@@ -3,12 +3,23 @@ import os.path
 import sys
 BUF_SIZE=128*1024
 def sendFile(fn):
+    units=("Byte","KB","MB","GB")
     fnsize=os.path.getsize(fn)
     count = 0
     stage = int(fnsize / 100)
     stage_idx = 0
     HOST = ''                 # Symbolic name meaning all available interfaces
     PORT = 50007              # Arbitrary non-privileged port
+    unit=0
+    showsize=fnsize
+    while showsize >= 1024:
+        showsize = int(showsize/1024)
+        unit=unit+1
+        if unit==2:
+            break
+    
+    
+    print("{} {}".format(showsize,units[unit]))
     with open(fn,'rb') as src:
         print('wait incoming request')
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -35,9 +46,8 @@ def recvFile(fn):
         s.connect((HOST, PORT))
         while True:
             data = s.recv(1024)
+            if not data:break
             dst.write(data)
-            if len(data) < 1024:
-                break
         s.close()
     dst.close()
 
@@ -46,3 +56,5 @@ if __name__ == "__main__":
     if count == 3 :
         if sys.argv[1] == '-s':
             sendFile(sys.argv[2])
+    else:
+        recvFile('/home/arm/x.mp4')
