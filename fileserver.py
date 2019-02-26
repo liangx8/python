@@ -47,15 +47,37 @@ command:
     except Exception as e:
         logging.error(e)
         return True
+
+def sendStr(io,s):
+    if s:
+        buf=s.encode('utf-8')
+        bufsize=len(buf)
+        io.send(bufsize.to_bytes(2,CHAR_ENDIAN))
+        sock.send(buf)
+    else:
+        io.send(b"\0\0")
+    
 SOCKFILE='/tmp/copy.sock'
+
+
 if __name__== '__main__' :
-    if len(sys.argv) > 1:
+    argc=len(sys.argv)
+    if argc > 1:
         sock= socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
         sock.connect(SOCKFILE)
-        buf=sys.argv[1].encode('utf-8')
-        bufsize=len(buf)
-        sock.send(bufsize.to_bytes(2,CHAR_ENDIAN))
-        sock.send(buf)
+        if sys.argv[1] == 'ls':
+            sock.send(b'\1')
+            if argc > 2:
+                sendStr(sock,sys.argv[2])
+            else:
+                sendStr(sock,None)
+        elif sys.argv[1] == 'quit':
+            sock.send(b'\5')
+        while True:
+            data=sock.recv(4096)
+            if not data :break
+            print(data)
+        
         sock.close()
     else:
         logging.basicConfig(filename='copy.log',format='%(asctime)s %(levelname)s:%(message)s',level=logging.INFO)
