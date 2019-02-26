@@ -58,7 +58,9 @@ def sendStr(io,s):
         io.send(b"\0\0")
     
 SOCKFILE='/tmp/copy.sock'
-
+def returnDir(io):
+    pass
+    
 
 if __name__== '__main__' :
     argc=len(sys.argv)
@@ -71,6 +73,7 @@ if __name__== '__main__' :
                 sendStr(sock,sys.argv[2])
             else:
                 sendStr(sock,None)
+            returnDir(sock)
         elif sys.argv[1] == 'quit':
             sock.send(b'\5')
         while True:
