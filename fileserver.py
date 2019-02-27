@@ -31,7 +31,15 @@ command:
                 download 指定文件的内容	
   失败
     position 0: 1
-    position 1: 失败原因(字符串)  
+    position 1: 失败原因(字符串)
+文件实体格式
+  position 0: uint32  size of file, 如果是目录则为0
+  position 4: 文件名
+
+列文件实体格式
+  position 0: uint8 目录总数
+  position 1~n:文件实体
+
 """
     try:
         bs=pipeio.recv(2)
