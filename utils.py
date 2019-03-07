@@ -5,7 +5,12 @@ def json_data(fn,encoding='utf-8'):
     j=json.load(f)
     f.close()
     return j
-
+def uint8(cs):
+    print("// `{}' size: {} ".format(cs,len(cs)))
+    print("const uint8_t holder[]",end="={")
+    for c in cs:
+        print("0x{:02x}".format(ord(c)),end=",")
+    print("}")
 if __name__ == "__main__":
     buf=json_data("d:/download/expense.json")
     for it in buf['data']:
