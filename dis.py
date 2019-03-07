@@ -266,6 +266,7 @@ def parse_opcode(s):
     return s[:len(s)-1]
         
 def ioname():
+    """atmel相关"""
     target = open("/home/arm/git/motor/c/hall.ast","w")
     with codecs.open("/home/arm/git/motor/c/hall.lss","r","utf-8") as f:
         for line in f:
@@ -282,6 +283,60 @@ cat /usr/avr/include/avr/iomx8.h | grep "MEM8" >> <target file>
             al = st.split(" ")
             length=len(st)
             print("\"{}\":\"{}\",".format(st[length-5:length-1],al[1]))
+def info(line):
+    """info of return: ITNAME,ITNUM,COMMENT"""
+    cp=re.compile(r"(\w+) += +(-?\d+),? +(/\*.*\*/)")
+    r=cp.match(line)
+    g=r.groups()
+    return g[0],g[1],g[2]
+def handler(s):
+    cnt=len(s)
+    return s[:cnt-4]+"Handler"
+def stm_vtable(xx):
+    """STM32中断向量表"""
+    ss=list()
+    with open(xx,'r') as f:
+        for line in f:
+            sline=line.strip()
+            cnt=len(sline)
+            if cnt and not sline.startswith('/*'):
+                s=info(sline)
+                ss.append((s[0],int(s[1]),s[2]))
+    def cmp(x):
+        return x[1]
+    maxv=max(ss,key=cmp)
+    minv=min(ss,key=cmp)
+
+    base=0x8000000-4
+    ss.sort(key=cmp)
+    idx=0
+    rr=list()
+    vmin=minv[1]-2
+    for num in range (vmin,maxv[1]+1):
+        base = base + 4
+        if num == vmin:
+            rr.append(("_estack",num,"/*!< {} 0x{:08x} Top of stack*/".format(num,base)))
+            continue
+        if num == vmin+1:
+            rr.append(("Reset_Handler",num,"/*!< {} 0x{:08x} Reset Interrupt*/".format(num,base)))
+            continue
+        
+        if num == ss[idx][1]:
+            cmt=ss[idx][2][:4]+" {} 0x{:08x}"+ss[idx][2][4:]
+            rr.append((handler(ss[idx][0]),num,cmt.format(num,base)))
+            idx = idx + 1
+        else:
+            rr.append(("0",num,"/*!< {} 0x{:08x} Reserved*/".format(num,base)))
+        
+    for s in rr:
+        print(".long\t{}\t\t{}".format(s[0],s[2]))
+
+    for s in rr:
+        if  s[0] != '0':
+            print(".weak {}\n.thumb_set {}, Default_Handler".format(s[0],s[0]))
+        
+                
 if __name__=="__main__" :
-    ioname()
+    #ioname()
+    stm_vtable('stm32f10xxx.txt')
 
