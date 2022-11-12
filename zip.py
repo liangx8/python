@@ -2,16 +2,18 @@
 import zipfile
 import argparse
 import os
+import sys
 
 def list_content(zfile):
     for n in zfile.infolist():
         if not n.is_dir():
             print(n.filename)
-def extract_content(zfile,dst=None):
-    if dst == None:
-        zfile.extractall()
-    else:
-        zfile.extractall(dst)
+def extract_content(zfile,dst=None,pwd=None):
+#    if dst == None:
+#        zfile.extractall()
+#    else:
+#        zfile.extractall(dst)
+        zfile.extractall(path=dst,pwd=pwd)
 def walk_file(path,z):
     for root,dirs,files in os.walk(path):
         for f in files:
@@ -26,16 +28,20 @@ if __name__ == '__main__':
     parser.add_argument('-l',action='store_true',help="list content")
     parser.add_argument('-x',action="store_true",help="extract content to current directory")
     parser.add_argument('-c',action="store_true",help="create zip file")
+    parser.add_argument('-p',nargs=1,help="password")
 
     args = parser.parse_args()
     try:
+        pwd = None
+        if args.p:
+            pwd=args.p[0]
         if args.l :
             with zipfile.ZipFile(args.zfile[0]) as zip:
                 list_content(zip)
             exit()
         if args.x :
             with zipfile.ZipFile(args.zfile[0]) as zip:
-                extract_content(zip)
+                extract_content(zip,None,pwd.encode())
             exit()
         if args.c :
             if len(args.zfile)==1:

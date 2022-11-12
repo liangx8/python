@@ -1,10 +1,9 @@
 import os
 import re
 import types
-
 def createFinder(rootpath,fmatch):
     def find(cp):
-        """ cp 可以是regexp,也可以是一个func(str）bool 的函数"""
+        """ cp 可以是regexp,也可以是一个func(str)bool 的函数"""
         for root,dirs,files in os.walk(rootpath):
             for f in files:
                 fullname="{}/{}".format(root,f)
@@ -57,10 +56,6 @@ def decode_byte(bs):
         return str(bs,'latin_1'),None
     except Exception as e:
         return None,e
-
-def comp(line):
-    m=re.search("RSTSRC",line)
-    return m
 if __name__=="__main__" :
     
     ff=re.compile("lua$")
