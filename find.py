@@ -63,13 +63,13 @@ def comp(line):
     return m
 if __name__=="__main__" :
     
-    ff=re.compile("c$|h$")
+    ff=re.compile("lua$")
     def cfilter(path):
         return ff.search(path)
-    cf=createFinder("/home/arm/git/stm32f10x-stdperiph-lib",cfilter)
+    cf=createFinder("/home/arm/git/factoriomod",cfilter)
 # cf.find("Flags0\\.PWM_ON")
     
-    cf("xx1234")
+    cf("LB-Modular")
     cnt = 0
     def count(l):
         global cnt

@@ -1,3 +1,4 @@
+import datetime
 def b(v):
     if v>255:
         return '{:016b}'.format(v)
@@ -15,7 +16,9 @@ def show(buf,w=16):
         if i % w == 0:
             print()
 
-
+def add_days(base,inc):
+    days=datetime.timedelta(days=inc)
+    return base+days
 def current(n):
     adc2a=1024*.8/1.1
     f="""1毫安时= 3.6安秒
