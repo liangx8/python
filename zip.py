@@ -8,12 +8,6 @@ def list_content(zfile):
     for n in zfile.infolist():
         if not n.is_dir():
             print(n.filename)
-def extract_content(zfile,dst=None,pwd=None):
-#    if dst == None:
-#        zfile.extractall()
-#    else:
-#        zfile.extractall(dst)
-        zfile.extractall(path=dst,pwd=pwd)
 def walk_file(path,z):
     for root,dirs,files in os.walk(path):
         for f in files:
@@ -36,24 +30,25 @@ if __name__ == '__main__':
         if args.p:
             pwd=args.p[0]
         if args.l :
-            with zipfile.ZipFile(args.zfile[0]) as zip:
-                list_content(zip)
+            with zipfile.ZipFile(args.zfile[0]) as zp:
+                list_content(zp)
             exit()
         if args.x :
-            with zipfile.ZipFile(args.zfile[0]) as zip:
-                extract_content(zip,None,pwd.encode())
+            with zipfile.ZipFile(args.zfile[0]) as zp:
+                #extract_content(zip,None,pwd.encode())
+                zp.extractall(pwd=pwd.encode())
             exit()
         if args.c :
             if len(args.zfile)==1:
                 exit()
-            with zipfile.ZipFile(args.zfile[0],"w") as zip:
+            with zipfile.ZipFile(args.zfile[0],"w") as zp:
                 
                 for sub in args.zfile[1:]:
                     if os.path.islink(sub): continue
                     if os.path.isfile(sub):
-                        zip.write(sub)
+                        zp.write(sub)
                         continue
-                    walk_file(sub,zip)
+                    walk_file(sub,zp)
     except zipfile.BadZipfile as e:
         #print("Error: '{}' is not zip format".format(args.zfile))
         print(e)
