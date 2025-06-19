@@ -1,4 +1,6 @@
 #!/bin/python
+# -*- coding: utf-8 -*-
+
 # search big file
 
 import os

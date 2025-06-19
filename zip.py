@@ -36,7 +36,10 @@ if __name__ == '__main__':
         if args.x :
             with zipfile.ZipFile(args.zfile[0]) as zp:
                 #extract_content(zip,None,pwd.encode())
-                zp.extractall(pwd=pwd.encode())
+                if pwd != None:
+                    zp.extractall(pwd=pwd.encode())
+                else:
+                    zp.extractall()
             exit()
         if args.c :
             if len(args.zfile)==1:
