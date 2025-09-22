@@ -39,4 +39,4 @@ def lesson2(root):
     full(root)
 
 if __name__ == "__main__":
-    lesson2("/home/arm")
+    lesson2("/home/cyc")
