@@ -60,5 +60,4 @@ def lesson4():
 #            print("#define DMA_ISR_{}{}_pos{}{}".format(pp,ch+1,bs.decode(),ch*4+p))
 
 if __name__ == "__main__":
-    #lesson2("/home/arm")
-    lesson4()
+    lesson2("/home/cyc")
