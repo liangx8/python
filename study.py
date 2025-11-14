@@ -37,6 +37,28 @@ def full(root):
 
 def lesson2(root):
     full(root)
+def lesson3():
+    import math
+    for x in range(180):
+        if (x % 3) ==2:
+            endc=',\n'
+        else:
+            endc=','
+        print("SINE_DUTY(%.4ff)" % (math.sin(math.pi*x/180)),end=endc)
+def lesson4():
+    ar=("GIF","TCIF","HTIF","TEIF")
+    bs=bytearray()
+    for ch in range(7):
+        for p in range(len(ar)):
+            bs.clear()
+            pp=ar[p]
+            sz=len(pp)
+            com=10-sz
+            for _ in range(com):
+                bs.append(32)
+            print("#define DMA_IFCR_C{}{}_pos{}{}".format(pp,ch+1,bs.decode(),ch*4+p))
+#            print("#define DMA_ISR_{}{}_pos{}{}".format(pp,ch+1,bs.decode(),ch*4+p))
 
 if __name__ == "__main__":
-    lesson2("/home/arm")
+    #lesson2("/home/arm")
+    lesson4()
