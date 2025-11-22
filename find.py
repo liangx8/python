@@ -5,6 +5,9 @@ def createFinder(rootpath,fmatch):
     def find(cp):
         """ cp 可以是regexp,也可以是一个func(str)bool 的函数"""
         for root,dirs,files in os.walk(rootpath):
+            if root.endswith('.git'):
+                continue
+
             for f in files:
                 fullname="{}/{}".format(root,f)
                 if (type(fmatch)==types.FunctionType):
@@ -58,19 +61,13 @@ def decode_byte(bs):
         return None,e
 if __name__=="__main__" :
     
-    ff=re.compile("lua$")
+    ff=(".mk",)
     def cfilter(path):
-        return ff.search(path)
-    cf=createFinder("/home/arm/git/factoriomod",cfilter)
+        for aa in ff:
+            if(path.endswith(aa)):
+               return True
+        return False
+    cf=createFinder("/home/cyc/git/AM32",cfilter)
 # cf.find("Flags0\\.PWM_ON")
     
-    cf("LB-Modular")
-    cnt = 0
-    def count(l):
-        global cnt
-        cnt = cnt + 1
-        if cnt == 1000:
-            return True
-
-    cf(count)
-    print(cnt)
+    cf("lc")
