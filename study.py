@@ -58,6 +58,11 @@ def lesson4():
                 bs.append(32)
             print("#define DMA_IFCR_C{}{}_pos{}{}".format(pp,ch+1,bs.decode(),ch*4+p))
 #            print("#define DMA_ISR_{}{}_pos{}{}".format(pp,ch+1,bs.decode(),ch*4+p))
-
+def sinarray():
+    import math
+    onedeg=math.pi / 180
+    for deg in range(0,180):
+        print("{:4d} {:.4f}".format(deg,math.sin(onedeg * deg)))
 if __name__ == "__main__":
-    lesson2("/home/cyc")
+    sinarray()
+#    lesson2("/home/cyc")
