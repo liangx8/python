@@ -61,13 +61,13 @@ def decode_byte(bs):
         return None,e
 if __name__=="__main__" :
     
-    ff=(".mk",)
+    ff=(".cfg",)
     def cfilter(path):
         for aa in ff:
             if(path.endswith(aa)):
                return True
         return False
-    cf=createFinder("/home/cyc/git/AM32",cfilter)
+    cf=createFinder("/usr/share/openocd/scripts/target",cfilter)
 # cf.find("Flags0\\.PWM_ON")
     
-    cf("lc")
+    cf("0x2ba01477")
