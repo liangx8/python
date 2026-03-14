@@ -63,6 +63,15 @@ def sinarray():
     onedeg=math.pi / 180
     for deg in range(0,180):
         print("{:4d} {:.4f}".format(deg,math.sin(onedeg * deg)))
+def jsoncb(num):
+    print(num)
+def jsontest():
+    import json
+    src='''{"ary":[0,2,3,354,5,43,5,34,5,445,4,{"one":1}]}'''
+    print(json.loads(src,object_hook=jsoncb))
+
+
 if __name__ == "__main__":
-    sinarray()
+#    sinarray()
 #    lesson2("/home/cyc")
+    jsontest()
