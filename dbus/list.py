@@ -1,6 +1,22 @@
 import sys
 
 import dbus
+import dbus.service
+
+class Counter(dbus.service.Object):
+    def __init__(self,object_path):
+        dbus.service.Object.__init__(self,dbus.SessionBus(),object_path)
+        self.cnt=0
+    @dbus.service.method(dbus_interface="com.ok.waybar.Counter")
+    def Inc(self):
+        pass
+
+
+def server():
+    bus=dbus.SessionBus()
+    print('create dbus')
+    dbusObj=dbus.service.Object('/com/ok/waybar/counter')
+
 
 def main(argv):
     factory = dbus.SystemBus
@@ -38,4 +54,5 @@ def main(argv):
         print (service)
 
 if __name__ == '__main__':
+    server()
     main(sys.argv)
