@@ -8,7 +8,8 @@ gasdate = (datetime.datetime(2024,12,18),
            datetime.datetime(2026,1,22),
            datetime.datetime(2026,3,14),
            datetime.datetime(2026,5,16),
-           datetime.datetime(2026,7,14))
+           datetime.datetime(2026,7,14),
+           datetime.datetime(2026,9,24))
 if __name__ == "__main__":
     cnt=len(gasdate)
     for x in range(cnt-1):
